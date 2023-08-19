@@ -15,7 +15,7 @@ namespace MFMELaunch
 
         private const float kKeypressesInitialDelay = 2.0f;
         private const float kKeypressInterval = 0.05f;
-        private const float kKeypressesDuration = 9.0f;
+        private const float kKeypressesDuration = 6.0f;
 
         private string[] _args = null;
         private string _gamFilePath = null;

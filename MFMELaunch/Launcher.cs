@@ -19,7 +19,7 @@ namespace MFMELaunch
 
         // this seems necessary on Harvey's cab when launching from the TouchPlay
         // frontend, however wasn't necessary on my dev PC
-        private const bool kSendFinalF3ToForceFullScreenMax = true;
+        private const bool kSendFinalShiftF3ToForceFullScreenMaxStretch = true;
 
         private string[] _args = null;
         private string _gamFilePath = null;
@@ -62,9 +62,11 @@ namespace MFMELaunch
 
             SendKeyPresses(kKeypressInterval, kKeypressesDuration);
 
-            if(kSendFinalF3ToForceFullScreenMax)
+            if(kSendFinalShiftF3ToForceFullScreenMaxStretch)
             {
-                _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.F3);
+                _inputSimulator.Keyboard.ModifiedKeyStroke(
+                    WindowsInput.Native.VirtualKeyCode.SHIFT,
+                    WindowsInput.Native.VirtualKeyCode.F3);
             }
 
             AwaitMFMEExeProcessExit();

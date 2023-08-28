@@ -13,9 +13,13 @@ namespace MFMELaunch
     {
         private const string kMfmeExeFilename = "MFME.exe";
 
-        private const float kKeypressesInitialDelay = 2.0f;
+        private const float kKeypressesInitialDelay = 4.0f;
         private const float kKeypressInterval = 0.05f;
-        private const float kKeypressesDuration = 6.0f;
+        private const float kKeypressesDuration = 4.0f;
+
+        // this seems necessary on Harvey's cab when launching from the TouchPlay
+        // frontend, however wasn't necessary on my dev PC
+        private const bool kSendFinalF3ToForceFullScreenMax = true;
 
         private string[] _args = null;
         private string _gamFilePath = null;
@@ -58,6 +62,13 @@ namespace MFMELaunch
 
             SendKeyPresses(kKeypressInterval, kKeypressesDuration);
 
+            if(kSendFinalF3ToForceFullScreenMax)
+            {
+                _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.F3);
+            }
+
+            AwaitMFMEExeProcessExit();
+
             return true;
         }
 
@@ -67,7 +78,6 @@ namespace MFMELaunch
 
             process.StartInfo.FileName = kMfmeExeFilename;
             process.StartInfo.Arguments = _gamFilePath;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
 
             return process;
         }
@@ -84,6 +94,15 @@ namespace MFMELaunch
                 _inputSimulator.Keyboard.KeyPress(WindowsInput.Native.VirtualKeyCode.SPACE);
 
                 Thread.Sleep((int)(pressInterval * 1000f));
+            }
+        }
+
+        private void AwaitMFMEExeProcessExit()
+        {
+            const float kAwaitExitSleepDuration = 0.100f;
+            while(!_mfmeProcess.HasExited)
+            {
+                Thread.Sleep((int)(kAwaitExitSleepDuration * 1000f));
             }
         }
     }
